@@ -17,9 +17,16 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Account
+        - Token
+        - Mint
+        - Burn
+        - Transfer
+        - Block
+        - TransactionMeta
+        - OperatorOwner
       abis:
-        - name: makersplace
-          file: ./abis/makersplace.json
+        - name: makerstokenv2
+          file: ./abis/makerstokenv2.json
       eventHandlers:
         - event: Approval(indexed address,indexed address,indexed uint256)
           handler: handleApproval
