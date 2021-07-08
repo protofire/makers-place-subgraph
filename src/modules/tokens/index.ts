@@ -35,22 +35,22 @@ export namespace tokens {
 	}
 
 	export function burnToken(
-		tokenId: string
+		tokenId: string, address: string
 	): Token {
-		let token = loadToken(tokenId)
+		let token = getOrCreateToken(tokenId, address)
 		token.burned = true
 		return token as Token
 	}
 
 
 	export function changeOwner(tokenId: string, owner: string): Token {
-		let token = loadToken(tokenId)
+		let token = getOrCreateToken(tokenId, owner)
 		token.owner = owner
 		return token as Token
 	}
 
-	export function addApproval(tokenId: string, approval: string): Token {
-		let token = loadToken(tokenId)
+	export function addApproval(tokenId: string, approval: string, owner: string): Token {
+		let token = getOrCreateToken(tokenId, owner)
 		token.approval = approval
 		return token as Token
 	}

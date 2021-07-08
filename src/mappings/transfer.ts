@@ -24,7 +24,7 @@ export namespace transfer {
 		let account = accounts.getOrCreateAccount(from)
 		account.save()
 
-		let token = tokens.burnToken(tokenId)
+		let token = tokens.burnToken(tokenId, from.toHex())
 		token.save()
 
 		let transaction = transactions.getNewBurn(account.id, tokenId, timestamp, blockId)

@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: This subgraph provide an standard erc-721 implementation, providing info about minting, transfer, bruning, approval.
+description: WIP - This subgraph provide an standard erc-721 implementation extended to the digital media features of markersplace.
 repository: https://github.com/protofire/makers-place-subgraph
 schema:
   file: ./schema.graphql

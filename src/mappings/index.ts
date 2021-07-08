@@ -2,9 +2,8 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import {
 	Approval,
 	ApprovalForAll,
-	Generated,
 	Transfer
-} from "../../generated/autoglyphs/autoglyphs";
+} from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
 
@@ -61,7 +60,7 @@ export function handleApproval(event: Approval): void {
 	let owner = accounts.getOrCreateAccount(ownerAddress)
 	owner.save()
 
-	let token = tokens.addApproval(tokenId, approvedAddress.toHex())
+	let token = tokens.addApproval(tokenId, approvedAddress.toHex(), ownerAddress.toHex())
 	token.save()
 }
 
