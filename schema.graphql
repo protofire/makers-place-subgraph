@@ -189,3 +189,34 @@ type Transfer implements Transaction @entity {
 	"Current transaction type"
 	type: TranasctionType!
 }
+
+
+#
+#
+#
+#  Makers Place entities
+#
+#
+
+type DigitalMedia @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Digital media storage address"
+	storeContractAddress: bytes!
+
+	"Digital media creator's Address"
+	creatorAddress: bytues!
+
+	"DigitalMedia's total supply"
+	totalSupply: BigInt!
+
+	"DigitalMedia's print index"
+	printIndex: BigInt!
+
+	"Related Collection Id"
+	collectionId: BigInt!
+
+	"DigitalMedia's metadata's "
+	metadataPath: string! 
+}
