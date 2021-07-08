@@ -220,3 +220,17 @@ type DigitalMedia @entity {
 	"DigitalMedia's metadata's "
 	metadataPath: string! 
 }
+
+type DigitalMediaCollection @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Collection's media storage address"
+	storeContractAddress: bytes!
+
+	"Digital media creator's Address"
+	creatorAddress: bytues!
+
+	"Colelction's metadata path"
+	metadataPath: string! 
+}
