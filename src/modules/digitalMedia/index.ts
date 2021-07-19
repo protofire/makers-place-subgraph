@@ -18,6 +18,15 @@ export namespace digitalMedia {
 			entity.collectionId = collectionId
 			entity.metadataPath = metadataPath
 		}
-		return entity
+		return entity as DigitalMedia
+	}
+
+	export function burnToken(id: string): DigitalMedia {
+		let entity = DigitalMedia.load(id)
+		if (entity == null) {
+			entity = new DigitalMedia(id)
+		}
+		entity.burned = true
+		return entity as DigitalMedia
 	}
 }

@@ -36,4 +36,6 @@ dataSources:
           handler: handleTransfer
         - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
           handler: handleDigitalMediaCreateEvent
+        - event: DigitalMediaBurnEvent(uint256,address,address)
+          handler: handleDigitalMediaBurnEvent
       file: ./src/mappings/index.ts

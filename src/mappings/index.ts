@@ -2,7 +2,9 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import {
 	Approval,
 	ApprovalForAll,
-	Transfer
+	Transfer,
+	DigitalMediaCreateEvent,
+	DigitalMediaBurnEvent
 } from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
@@ -11,12 +13,30 @@ import {
 	tokens,
 	accounts,
 	blocks,
-	transactionsMeta
+	transactionsMeta,
+	digitalMedia as digitalMediaModule
 } from "../modules";
 
-export * from "./digitalMedia"
 
+export function handleDigitalMediaBurnEvent(event: DigitalMediaBurnEvent): void {
+	let digitalMedia = digitalMediaModule.burnToken(
+		event.params.id.toHex()
+	)
+	digitalMedia.save()
+}
 
+export function handleDigitalMediaCreateEvent(event: DigitalMediaCreateEvent): void {
+	let digitalMedia = digitalMediaModule.getOrCreateDigitalMedia(
+		event.params.id.toHex(),
+		event.params.storeContractAddress,
+		event.params.creator,
+		event.params.totalSupply,
+		event.params.collectionId,
+		event.params.printIndex,
+		event.params.metadataPath
+	)
+	digitalMedia.save()
+}
 
 export function handleTransfer(event: Transfer): void {
 

@@ -203,22 +203,25 @@ type DigitalMedia @entity {
 	id: ID!	
 
 	"Digital media storage address"
-	storeContractAddress: Bytes!
+	storeContractAddress: Bytes
 
 	"Digital media creator's Address"
-	creatorAddress: Bytes!
+	creatorAddress: Bytes
 
 	"DigitalMedia's total supply"
-	totalSupply: BigInt!
+	totalSupply: BigInt
 
 	"DigitalMedia's print index"
-	printIndex: BigInt!
+	printIndex: BigInt
 
 	"Related Collection Id"
-	collectionId: BigInt!
+	collectionId: BigInt
 
 	"DigitalMedia's metadata's "
-	metadataPath: String! 
+	metadataPath: String
+
+	"was this token burned"
+	burned: Boolean 
 }
 
 type DigitalMediaCollection @entity {
