@@ -34,4 +34,6 @@ dataSources:
           handler: handleApprovalForAll
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+        - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
+          handler: handleDigitalMediaCreateEvent
       file: ./src/mappings/index.ts

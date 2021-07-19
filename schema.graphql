@@ -203,10 +203,10 @@ type DigitalMedia @entity {
 	id: ID!	
 
 	"Digital media storage address"
-	storeContractAddress: bytes!
+	storeContractAddress: Bytes!
 
 	"Digital media creator's Address"
-	creatorAddress: bytues!
+	creatorAddress: Bytes!
 
 	"DigitalMedia's total supply"
 	totalSupply: BigInt!
@@ -218,7 +218,7 @@ type DigitalMedia @entity {
 	collectionId: BigInt!
 
 	"DigitalMedia's metadata's "
-	metadataPath: string! 
+	metadataPath: String! 
 }
 
 type DigitalMediaCollection @entity {
@@ -226,11 +226,11 @@ type DigitalMediaCollection @entity {
 	id: ID!	
 
 	"Collection's media storage address"
-	storeContractAddress: bytes!
+	storeContractAddress: Bytes!
 
 	"Digital media creator's Address"
-	creatorAddress: bytues!
+	creatorAddress: Bytes!
 
 	"Colelction's metadata path"
-	metadataPath: string! 
+	metadataPath: String! 
 }

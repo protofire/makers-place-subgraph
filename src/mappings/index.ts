@@ -14,6 +14,8 @@ import {
 	transactionsMeta
 } from "../modules";
 
+export * from "./digitalMedia"
+
 
 
 export function handleTransfer(event: Transfer): void {
