@@ -78,6 +78,12 @@ type Account @entity {
 	"Account evm address"
 	address: Bytes
 
+	"the creator that is approved to printing new tokens and creations"
+	approvedCreator: Account
+
+	"the account that approves this account"
+	approvedFor: Account @derivedFrom(field: "approvedCreator")
+
 	"Owned tokens"
 	tokens: [Token!]! @derivedFrom(field: "owner")
 

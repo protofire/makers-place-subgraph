@@ -40,4 +40,6 @@ dataSources:
           handler: handleDigitalMediaBurn
         - event: DigitalMediaReleaseBurnEvent(uint256,address)
           handler: handleDigitalMediaReleaseBurn
+        - event: ChangedCreator(address,address)
+          handler: handleChangedCreator
       file: ./src/mappings/index.ts

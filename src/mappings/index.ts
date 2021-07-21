@@ -7,7 +7,8 @@ import {
 	DigitalMediaBurnEvent,
 	DigitalMediaReleaseCreateEvent,
 	DigitalMediaReleaseBurnEvent,
-	DigitalMediaCollectionCreateEvent
+	DigitalMediaCollectionCreateEvent,
+	ChangedCreator
 } from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
@@ -21,6 +22,21 @@ import {
 	releases,
 	collections
 } from "../modules";
+
+// * Either the _caller must be the _creator or the _caller must be the existing
+// * approvedCreator.
+
+export function handleChangedCreator(event: ChangedCreator): void {
+	let creatorAddress = event.params.creator
+	let newCreatorAddress = event.params.newCreator
+	let newCreator = accounts.getOrCreateAccount(newCreatorAddress)
+	newCreator.save()
+	let creator = accounts.changeApprovedCreator(
+		creatorAddress,
+		newCreator.id
+	)
+	creator.save()
+}
 
 export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollectionCreateEvent): void {
 	let collection = collections.getOrCreateDigitalMediaCollection(
