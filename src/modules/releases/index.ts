@@ -1,7 +1,7 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { DigitalMediaRelease } from "../../../generated/schema";
 
-export namespace release {
+export namespace releases {
 	export function getOrCreateDigitalMediaRelease(
 		id: string, owner: Bytes, printEdition: BigInt,
 		tokenURI: string, digitalMediaId: string

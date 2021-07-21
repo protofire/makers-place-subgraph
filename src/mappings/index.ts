@@ -6,7 +6,8 @@ import {
 	DigitalMediaCreateEvent,
 	DigitalMediaBurnEvent,
 	DigitalMediaReleaseCreateEvent,
-	DigitalMediaReleaseBurnEvent
+	DigitalMediaReleaseBurnEvent,
+	DigitalMediaCollectionCreateEvent
 } from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
@@ -17,16 +18,27 @@ import {
 	blocks,
 	transactionsMeta,
 	digitalMedia as digitalMediaModule,
-	release as releaseModule
+	releases,
+	collections
 } from "../modules";
 
+export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollectionCreateEvent): void {
+	let collection = collections.getOrCreateDigitalMediaCollection(
+		event.params.id.toHex(),
+		event.params.creator,
+		event.params.storeContractAddress,
+		event.params.metadataPath ,
+	)
+	collection.save()
+}
+
 export function handleDigitalMediaReleaseBurn(event: DigitalMediaReleaseBurnEvent): void {
-	let release = releaseModule.burnToken(event.params.tokenId.toHex())
+	let release = releases.burnToken(event.params.tokenId.toHex())
 	release.save()
 }
 
 export function handleDigitalMediaReleaseCreate(event: DigitalMediaReleaseCreateEvent): void {
-	let release = releaseModule.getOrCreateDigitalMediaRelease(
+	let release = releases.getOrCreateDigitalMediaRelease(
 		event.params.id.toHex(),
 		event.params.owner,
 		event.params.printEdition,
