@@ -35,7 +35,9 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
         - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
-          handler: handleDigitalMediaCreateEvent
+          handler: handleDigitalMediaCreate
         - event: DigitalMediaBurnEvent(uint256,address,address)
-          handler: handleDigitalMediaBurnEvent
+          handler: handleDigitalMediaBurn
+        - event: DigitalMediaReleaseBurnEvent(uint256,address)
+          handler: handleDigitalMediaReleaseBurn
       file: ./src/mappings/index.ts

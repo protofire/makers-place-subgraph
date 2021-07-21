@@ -221,7 +221,30 @@ type DigitalMedia @entity {
 	metadataPath: String
 
 	"was this token burned"
-	burned: Boolean 
+	burned: Boolean
+
+	"related release"
+	release: DigitalMediaRelease @derivedFrom(field: "digitalMedia")
+}
+
+type DigitalMediaRelease @entity{
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Address that own's the release"
+ 	owner: Bytes
+
+	"Supply (?"
+ 	printEdition: BigInt
+
+	"Ipfs uri"
+ 	tokenURI: String
+
+	"related digital media"
+ 	digitalMedia: DigitalMedia
+
+	"was this token burned"
+	burned: Boolean
 }
 
 type DigitalMediaCollection @entity {
