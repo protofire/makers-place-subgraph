@@ -8,7 +8,8 @@ import {
 	DigitalMediaReleaseCreateEvent,
 	DigitalMediaReleaseBurnEvent,
 	DigitalMediaCollectionCreateEvent,
-	ChangedCreator
+	ChangedCreator,
+	UpdateDigitalMediaPrintIndexEvent
 } from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
@@ -20,8 +21,16 @@ import {
 	transactionsMeta,
 	digitalMedia as digitalMediaModule,
 	releases,
-	collections
+	collections,
 } from "../modules";
+
+export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMediaPrintIndexEvent): void {
+	let digitalMedia = digitalMediaModule.updatePrintIndex(
+		event.params.digitalMediaId.toHex(),
+		event.params.printEdition
+	)
+	digitalMedia.save()
+}
 
 // * Either the _caller must be the _creator or the _caller must be the existing
 // * approvedCreator.

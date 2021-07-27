@@ -29,4 +29,13 @@ export namespace digitalMedia {
 		entity.burned = true
 		return entity as DigitalMedia
 	}
+
+	export function updatePrintIndex(id: string, printIndex: BigInt): DigitalMedia {
+		let entity = DigitalMedia.load(id)
+		if (entity == null) {
+			entity = new DigitalMedia(id)
+		}
+		entity.printIndex = printIndex
+		return entity as DigitalMedia
+	}
 }
