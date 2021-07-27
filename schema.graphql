@@ -90,6 +90,9 @@ type Account @entity {
 	"Owned tokens"
 	tokens: [Token!]! @derivedFrom(field: "owner")
 
+	"Owned tokens amount"
+	tokensAmount: BigInt
+
 	"Approved tokens"
 	approved: [Token!]! @derivedFrom(field: "approval")
 	

@@ -8,7 +8,8 @@ import {
 export namespace transfer {
 
 	export function handleMint(to: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
-		let account = accounts.getOrCreateAccount(to)
+		let account = accounts.services.getOrCreateAccount(to)
+		account = accounts.helpers.increaseTokenCount(account)
 		account.save()
 
 		let token = tokens.mintToken(tokenId, to.toHex())
@@ -21,7 +22,8 @@ export namespace transfer {
 
 	export function handleBurn(from: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
 
-		let account = accounts.getOrCreateAccount(from)
+		let account = accounts.services.getOrCreateAccount(from)
+		account = accounts.helpers.decreaseTokenCount(account)
 		account.save()
 
 		let token = tokens.burnToken(tokenId, from.toHex())
@@ -33,10 +35,12 @@ export namespace transfer {
 
 	export function handleRegularTransfer(from: Bytes, to: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
 
-		let seller = accounts.getOrCreateAccount(from)
+		let seller = accounts.services.getOrCreateAccount(from)
+		seller = accounts.helpers.decreaseTokenCount(seller)
 		seller.save()
 
-		let buyer = accounts.getOrCreateAccount(to)
+		let buyer = accounts.services.getOrCreateAccount(to)
+		buyer = accounts.helpers.increaseTokenCount(buyer)
 		buyer.save()
 
 		let token = tokens.changeOwner(tokenId, buyer.id)

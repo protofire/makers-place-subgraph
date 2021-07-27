@@ -46,9 +46,9 @@ export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMedi
 export function handleChangedCreator(event: ChangedCreator): void {
 	let creatorAddress = event.params.creator
 	let newCreatorAddress = event.params.newCreator
-	let newCreator = accounts.getOrCreateAccount(newCreatorAddress)
+	let newCreator = accounts.services.getOrCreateAccount(newCreatorAddress)
 	newCreator.save()
-	let creator = accounts.changeApprovedCreator(
+	let creator = accounts.services.changeApprovedCreator(
 		creatorAddress,
 		newCreator.id
 	)
@@ -141,10 +141,10 @@ export function handleApproval(event: Approval): void {
 	let ownerAddress = event.params._owner
 	let approvedAddress = event.params._approved
 
-	let approved = accounts.getOrCreateAccount(approvedAddress)
+	let approved = accounts.services.getOrCreateAccount(approvedAddress)
 	approved.save()
 
-	let owner = accounts.getOrCreateAccount(ownerAddress)
+	let owner = accounts.services.getOrCreateAccount(ownerAddress)
 	owner.save()
 
 	let token = tokens.addApproval(tokenId, approvedAddress.toHex(), ownerAddress.toHex())
@@ -155,13 +155,13 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
 	let ownerAddress = event.params._owner
 	let operatorAddress = event.params._operator
 
-	let owner = accounts.getOrCreateAccount(ownerAddress)
+	let owner = accounts.services.getOrCreateAccount(ownerAddress)
 	owner.save()
 
-	let operator = accounts.getOrCreateAccount(operatorAddress)
+	let operator = accounts.services.getOrCreateAccount(operatorAddress)
 	operator.save()
 
-	let operatorOwner = accounts.getOrCreateOperatorOwner(owner.id, operator.id, event.params._approved)
+	let operatorOwner = accounts.services.getOrCreateOperatorOwner(owner.id, operator.id, event.params._approved)
 	operatorOwner.save()
 
 }
