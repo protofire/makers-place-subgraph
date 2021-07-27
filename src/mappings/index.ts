@@ -11,7 +11,15 @@ import {
 	ChangedCreator,
 	UpdateDigitalMediaPrintIndexEvent
 } from "../../generated/makersplace/makerstokenv2";
-
+/**
+* TODO: missing for index
+* - Pause()
+* - Unpause()
+* - OboApprovalForAll(address,address,bool)
+* - OboDisabledForAll(address)
+* - SingleCreatorChanged(indexed address,indexed address)
+* FIXME: Modules should consider pure and side effect distinctions
+*/
 import { transfer } from "./transfer"
 
 import {
@@ -104,7 +112,8 @@ export function handleTransfer(event: Transfer): void {
 	let txHash = event.transaction.hash
 	let timestamp = event.block.timestamp
 
-	let block = blocks.getOrCreateBlock(blockId, timestamp, blockNumber)
+	let block = blocks.services.getOrCreateBlock(blockId, timestamp, blockNumber)
+	block = blocks.helpers.increaseErc721TransactionsCount(block)
 	block.save()
 
 	let meta = transactionsMeta.getOrCreateTransactionMeta(

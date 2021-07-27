@@ -13,9 +13,12 @@ type Block implements Metadata @entity {
 	"Block's number"
     number: BigInt!
 
-	"Transactions contained in this block"
+	"ERC721 Transactions contained in this block"
 	transactions: [Transaction!] @derivedFrom(field: "block")
 
+	"ERC721 Transactions stored amount"
+	erc721TransactionsCount: BigInt
+	
 	"Chain transactions info"
 	transactionsMeta: [TransactionMeta!] @derivedFrom(field: "block")
 }
