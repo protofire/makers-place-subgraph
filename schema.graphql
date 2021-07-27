@@ -101,7 +101,10 @@ type Account @entity {
 	
 	"Transactions sent by this account"
 	sent: [TokenTransaction!] @derivedFrom(field: "from")
- 
+
+	"Sent transactions amount"
+	sentTransactionsAmount: BigInt
+
 	"Transactions recieved by this account"
 	recieved: [TokenTransaction!] @derivedFrom(field: "to")
 }

@@ -23,6 +23,7 @@ export namespace transfer {
 	export function handleBurn(from: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
 
 		let account = accounts.services.getOrCreateAccount(from)
+		account = accounts.helpers.increaseSentTransactionsCount(account)
 		account = accounts.helpers.decreaseTokenCount(account)
 		account.save()
 
@@ -36,6 +37,7 @@ export namespace transfer {
 	export function handleRegularTransfer(from: Bytes, to: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
 
 		let seller = accounts.services.getOrCreateAccount(from)
+		seller = accounts.helpers.increaseSentTransactionsCount(seller)
 		seller = accounts.helpers.decreaseTokenCount(seller)
 		seller.save()
 
