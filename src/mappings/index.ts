@@ -26,7 +26,7 @@ import {
 	tokens,
 	accounts,
 	blocks,
-	transactionsMeta,
+	transactions,
 	digitalMedia as digitalMediaModule,
 	releases,
 	collections,
@@ -116,7 +116,7 @@ export function handleTransfer(event: Transfer): void {
 	block = blocks.helpers.increaseErc721TransactionsCount(block)
 	block.save()
 
-	let meta = transactionsMeta.getOrCreateTransactionMeta(
+	let meta = transactions.getOrCreateTransactionMeta(
 		txHash.toHexString(),
 		blockId,
 		txHash,

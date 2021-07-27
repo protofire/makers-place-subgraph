@@ -1,7 +1,7 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
 import {
 	accounts,
-	transactions,
+	erc721Transactions,
 	tokens
 } from "../modules";
 
@@ -14,7 +14,7 @@ export namespace transfer {
 		let token = tokens.mintToken(tokenId, to.toHex())
 		token.save()
 
-		let transaction = transactions.getNewMint(account.id, tokenId, timestamp, blockId)
+		let transaction = erc721Transactions.getNewMint(account.id, tokenId, timestamp, blockId)
 		transaction.save()
 	}
 
@@ -27,7 +27,7 @@ export namespace transfer {
 		let token = tokens.burnToken(tokenId, from.toHex())
 		token.save()
 
-		let transaction = transactions.getNewBurn(account.id, tokenId, timestamp, blockId)
+		let transaction = erc721Transactions.getNewBurn(account.id, tokenId, timestamp, blockId)
 		transaction.save()
 	}
 
@@ -42,7 +42,7 @@ export namespace transfer {
 		let token = tokens.changeOwner(tokenId, buyer.id)
 		token.save()
 
-		let transaction = transactions.getNewTransfer(seller.id, buyer.id, tokenId, timestamp, blockId)
+		let transaction = erc721Transactions.getNewTransfer(seller.id, buyer.id, tokenId, timestamp, blockId)
 		transaction.save()
 	}
 }
