@@ -78,6 +78,12 @@ type Account @entity {
 	"Account evm address"
 	address: Bytes
 
+	"the creator that is approved to printing new tokens and creations"
+	approvedCreator: Account
+
+	"the account that approves this account"
+	approvedFor: Account @derivedFrom(field: "approvedCreator")
+
 	"Owned tokens"
 	tokens: [Token!]! @derivedFrom(field: "owner")
 
@@ -188,4 +194,75 @@ type Transfer implements Transaction @entity {
 
 	"Current transaction type"
 	type: TranasctionType!
+}
+
+
+#
+#
+#
+#  Makers Place entities
+#
+#
+
+type DigitalMedia @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Digital media storage address"
+	storeContractAddress: Bytes
+
+	"Digital media creator's Address"
+	creatorAddress: Bytes
+
+	"DigitalMedia's total supply"
+	totalSupply: BigInt
+
+	"DigitalMedia's print index"
+	printIndex: BigInt
+
+	"Related Collection Id"
+	collectionId: BigInt
+
+	"DigitalMedia's metadata's "
+	metadataPath: String
+
+	"was this token burned"
+	burned: Boolean
+
+	"related release"
+	release: DigitalMediaRelease @derivedFrom(field: "digitalMedia")
+}
+
+type DigitalMediaRelease @entity{
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Address that own's the release"
+ 	owner: Bytes
+
+	"Supply (?"
+ 	printEdition: BigInt
+
+	"Ipfs uri"
+ 	tokenURI: String
+
+	"related digital media"
+ 	digitalMedia: DigitalMedia
+
+	"was this token burned"
+	burned: Boolean
+}
+
+type DigitalMediaCollection @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Collection's media storage address"
+	storeContractAddress: Bytes!
+
+	"Digital media creator's Address"
+	creatorAddress: Bytes!
+
+	"Colelction's metadata path"
+	metadataPath: String! 
 }

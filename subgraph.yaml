@@ -1,5 +1,5 @@
 specVersion: 0.0.2
-description: This subgraph provide an standard erc-721 implementation, providing info about minting, transfer, bruning, approval.
+description: WIP - This subgraph provide an standard erc-721 implementation extended to the digital media features of markersplace.
 repository: https://github.com/protofire/makers-place-subgraph
 schema:
   file: ./schema.graphql
@@ -34,4 +34,14 @@ dataSources:
           handler: handleApprovalForAll
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
+        - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
+          handler: handleDigitalMediaCreate
+        - event: DigitalMediaBurnEvent(uint256,address,address)
+          handler: handleDigitalMediaBurn
+        - event: DigitalMediaReleaseBurnEvent(uint256,address)
+          handler: handleDigitalMediaReleaseBurn
+        - event: UpdateDigitalMediaPrintIndexEvent(uint256,uint32)
+          handler: handleUpdateDigitalMediaPrintIndexEvent
+        - event: ChangedCreator(address,address)
+          handler: handleChangedCreator
       file: ./src/mappings/index.ts

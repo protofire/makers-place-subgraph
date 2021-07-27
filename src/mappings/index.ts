@@ -2,9 +2,15 @@ import { ADDRESS_ZERO } from '@protofire/subgraph-toolkit'
 import {
 	Approval,
 	ApprovalForAll,
-	Generated,
-	Transfer
-} from "../../generated/autoglyphs/autoglyphs";
+	Transfer,
+	DigitalMediaCreateEvent,
+	DigitalMediaBurnEvent,
+	DigitalMediaReleaseCreateEvent,
+	DigitalMediaReleaseBurnEvent,
+	DigitalMediaCollectionCreateEvent,
+	ChangedCreator,
+	UpdateDigitalMediaPrintIndexEvent
+} from "../../generated/makersplace/makerstokenv2";
 
 import { transfer } from "./transfer"
 
@@ -12,10 +18,81 @@ import {
 	tokens,
 	accounts,
 	blocks,
-	transactionsMeta
+	transactionsMeta,
+	digitalMedia as digitalMediaModule,
+	releases,
+	collections,
 } from "../modules";
 
+export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMediaPrintIndexEvent): void {
+	let digitalMedia = digitalMediaModule.updatePrintIndex(
+		event.params.digitalMediaId.toHex(),
+		event.params.printEdition
+	)
+	digitalMedia.save()
+}
 
+// * Either the _caller must be the _creator or the _caller must be the existing
+// * approvedCreator.
+
+export function handleChangedCreator(event: ChangedCreator): void {
+	let creatorAddress = event.params.creator
+	let newCreatorAddress = event.params.newCreator
+	let newCreator = accounts.getOrCreateAccount(newCreatorAddress)
+	newCreator.save()
+	let creator = accounts.changeApprovedCreator(
+		creatorAddress,
+		newCreator.id
+	)
+	creator.save()
+}
+
+export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollectionCreateEvent): void {
+	let collection = collections.getOrCreateDigitalMediaCollection(
+		event.params.id.toHex(),
+		event.params.creator,
+		event.params.storeContractAddress,
+		event.params.metadataPath ,
+	)
+	collection.save()
+}
+
+export function handleDigitalMediaReleaseBurn(event: DigitalMediaReleaseBurnEvent): void {
+	let release = releases.burnToken(event.params.tokenId.toHex())
+	release.save()
+}
+
+export function handleDigitalMediaReleaseCreate(event: DigitalMediaReleaseCreateEvent): void {
+	let release = releases.getOrCreateDigitalMediaRelease(
+		event.params.id.toHex(),
+		event.params.owner,
+		event.params.printEdition,
+		event.params.tokenURI,
+		event.params.digitalMediaId.toHex()
+	)
+	release.save()
+
+}
+
+export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
+	let digitalMedia = digitalMediaModule.burnToken(
+		event.params.id.toHex()
+	)
+	digitalMedia.save()
+}
+
+export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
+	let digitalMedia = digitalMediaModule.getOrCreateDigitalMedia(
+		event.params.id.toHex(),
+		event.params.storeContractAddress,
+		event.params.creator,
+		event.params.totalSupply,
+		event.params.collectionId,
+		event.params.printIndex,
+		event.params.metadataPath
+	)
+	digitalMedia.save()
+}
 
 export function handleTransfer(event: Transfer): void {
 
@@ -61,7 +138,7 @@ export function handleApproval(event: Approval): void {
 	let owner = accounts.getOrCreateAccount(ownerAddress)
 	owner.save()
 
-	let token = tokens.addApproval(tokenId, approvedAddress.toHex())
+	let token = tokens.addApproval(tokenId, approvedAddress.toHex(), ownerAddress.toHex())
 	token.save()
 }
 

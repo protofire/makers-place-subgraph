@@ -40,4 +40,13 @@ export namespace accounts {
 		operatorOwner.approved = approved
 		return operatorOwner as OperatorOwner
 	}
+
+	export function changeApprovedCreator(
+		creatorAddress: Bytes,
+		newCreatorId: string
+	): Account {
+		let creator = getOrCreateAccount(creatorAddress)
+		creator.approvedCreator = newCreatorId
+		return creator as Account
+	}
 }
