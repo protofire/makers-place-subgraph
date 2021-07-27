@@ -107,6 +107,10 @@ type Account @entity {
 
 	"Transactions recieved by this account"
 	recieved: [TokenTransaction!] @derivedFrom(field: "to")
+
+	"recieved transactions amount"
+	recievedTransactionsAmount: BigInt
+
 }
 
 type OperatorOwner @entity {

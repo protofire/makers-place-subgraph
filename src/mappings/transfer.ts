@@ -1,4 +1,5 @@
 import { BigInt, Bytes } from '@graphprotocol/graph-ts'
+import { integer } from '@protofire/subgraph-toolkit';
 import {
 	accounts,
 	erc721Transactions,
@@ -9,6 +10,7 @@ export namespace transfer {
 
 	export function handleMint(to: Bytes, tokenId: string, timestamp: BigInt, blockId: string): void {
 		let account = accounts.services.getOrCreateAccount(to)
+		account = accounts.helpers.increaseRecievedTransactionsAmount(account)
 		account = accounts.helpers.increaseTokenCount(account)
 		account.save()
 
@@ -42,6 +44,7 @@ export namespace transfer {
 		seller.save()
 
 		let buyer = accounts.services.getOrCreateAccount(to)
+		buyer = accounts.helpers.increaseRecievedTransactionsAmount(buyer)
 		buyer = accounts.helpers.increaseTokenCount(buyer)
 		buyer.save()
 
