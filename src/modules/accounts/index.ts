@@ -43,6 +43,11 @@ export namespace accounts {
 	}
 	export namespace helpers {
 
+		export function increaseApprovedTokenCount(entity: Account): Account {
+			entity.tokensAmount = entity.approvedTokensAmount.plus(integer.ONE)
+			return entity as Account
+		}
+
 		export function increaseTokenCount(entity: Account): Account {
 			entity.tokensAmount = entity.tokensAmount.plus(integer.ONE)
 			return entity as Account

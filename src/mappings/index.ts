@@ -142,6 +142,7 @@ export function handleApproval(event: Approval): void {
 	let approvedAddress = event.params._approved
 
 	let approved = accounts.services.getOrCreateAccount(approvedAddress)
+	approved = accounts.helpers.increaseApprovedTokenCount(approved)
 	approved.save()
 
 	let owner = accounts.services.getOrCreateAccount(ownerAddress)

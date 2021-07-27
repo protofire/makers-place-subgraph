@@ -95,6 +95,9 @@ type Account @entity {
 
 	"Approved tokens"
 	approved: [Token!]! @derivedFrom(field: "approval")
+
+	"Approved tokens amount"
+	approvedTokensAmount: BigInt
 	
 	"Transactions sent by this account"
 	sent: [TokenTransaction!] @derivedFrom(field: "from")
