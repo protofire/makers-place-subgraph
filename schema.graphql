@@ -13,14 +13,17 @@ type Block implements Metadata @entity {
 	"Block's number"
     number: BigInt!
 
-	"Transactions contained in this block"
-	transactions: [Transaction!] @derivedFrom(field: "block")
+	"ERC721 Transactions contained in this block"
+	erc721Transactions: [Transaction!] @derivedFrom(field: "block")
+
+	"ERC721 Transactions stored amount"
+	erc721TransactionsCount: BigInt
 
 	"Chain transactions info"
-	transactionsMeta: [TransactionMeta!] @derivedFrom(field: "block")
+	transactions: [Transaction!] @derivedFrom(field: "block")
 }
 
-type TransactionMeta implements Metadata @entity {
+type Transaction implements Metadata @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
@@ -87,14 +90,27 @@ type Account @entity {
 	"Owned tokens"
 	tokens: [Token!]! @derivedFrom(field: "owner")
 
+	"Owned tokens amount"
+	tokensAmount: BigInt
+
 	"Approved tokens"
 	approved: [Token!]! @derivedFrom(field: "approval")
+
+	"Approved tokens amount"
+	approvedTokensAmount: BigInt
 	
 	"Transactions sent by this account"
-	sent: [Transaction!] @derivedFrom(field: "from")
- 
+	sent: [TokenTransaction!] @derivedFrom(field: "from")
+
+	"Sent transactions amount"
+	sentTransactionsAmount: BigInt
+
 	"Transactions recieved by this account"
-	recieved: [Transaction!] @derivedFrom(field: "to")
+	recieved: [TokenTransaction!] @derivedFrom(field: "to")
+
+	"recieved transactions amount"
+	recievedTransactionsAmount: BigInt
+
 }
 
 type OperatorOwner @entity {
@@ -118,7 +134,7 @@ enum TranasctionType {
  }
 
 
-interface Transaction {
+interface TokenTransaction {
  	"Internal ID used for indexation"
 	id: ID!
 
@@ -136,7 +152,7 @@ interface Transaction {
 }
 
 
-type Mint implements Transaction @entity {
+type Mint implements TokenTransaction @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
@@ -156,7 +172,7 @@ type Mint implements Transaction @entity {
 	type: TranasctionType!
 }
 
-type Burn implements Transaction @entity {
+type Burn implements TokenTransaction @entity {
 	"Internal ID used for indexation"
 	id: ID!
 
@@ -176,7 +192,7 @@ type Burn implements Transaction @entity {
 	type: TranasctionType!
 }
 
-type Transfer implements Transaction @entity {
+type Transfer implements TokenTransaction @entity {
 	"Internal ID used for indexation"
 	id: ID!
 

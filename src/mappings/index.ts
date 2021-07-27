@@ -11,14 +11,22 @@ import {
 	ChangedCreator,
 	UpdateDigitalMediaPrintIndexEvent
 } from "../../generated/makersplace/makerstokenv2";
-
+/**
+* TODO: missing for index
+* - Pause()
+* - Unpause()
+* - OboApprovalForAll(address,address,bool)
+* - OboDisabledForAll(address)
+* - SingleCreatorChanged(indexed address,indexed address)
+* FIXME: Modules should consider pure and side effect distinctions
+*/
 import { transfer } from "./transfer"
 
 import {
 	tokens,
 	accounts,
 	blocks,
-	transactionsMeta,
+	transactions,
 	digitalMedia as digitalMediaModule,
 	releases,
 	collections,
@@ -38,9 +46,9 @@ export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMedi
 export function handleChangedCreator(event: ChangedCreator): void {
 	let creatorAddress = event.params.creator
 	let newCreatorAddress = event.params.newCreator
-	let newCreator = accounts.getOrCreateAccount(newCreatorAddress)
+	let newCreator = accounts.services.getOrCreateAccount(newCreatorAddress)
 	newCreator.save()
-	let creator = accounts.changeApprovedCreator(
+	let creator = accounts.services.changeApprovedCreator(
 		creatorAddress,
 		newCreator.id
 	)
@@ -104,10 +112,11 @@ export function handleTransfer(event: Transfer): void {
 	let txHash = event.transaction.hash
 	let timestamp = event.block.timestamp
 
-	let block = blocks.getOrCreateBlock(blockId, timestamp, blockNumber)
+	let block = blocks.services.getOrCreateBlock(blockId, timestamp, blockNumber)
+	block = blocks.helpers.increaseErc721TransactionsCount(block)
 	block.save()
 
-	let meta = transactionsMeta.getOrCreateTransactionMeta(
+	let meta = transactions.getOrCreateTransactionMeta(
 		txHash.toHexString(),
 		blockId,
 		txHash,
@@ -132,10 +141,11 @@ export function handleApproval(event: Approval): void {
 	let ownerAddress = event.params._owner
 	let approvedAddress = event.params._approved
 
-	let approved = accounts.getOrCreateAccount(approvedAddress)
+	let approved = accounts.services.getOrCreateAccount(approvedAddress)
+	approved = accounts.helpers.increaseApprovedTokenCount(approved)
 	approved.save()
 
-	let owner = accounts.getOrCreateAccount(ownerAddress)
+	let owner = accounts.services.getOrCreateAccount(ownerAddress)
 	owner.save()
 
 	let token = tokens.addApproval(tokenId, approvedAddress.toHex(), ownerAddress.toHex())
@@ -146,13 +156,13 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
 	let ownerAddress = event.params._owner
 	let operatorAddress = event.params._operator
 
-	let owner = accounts.getOrCreateAccount(ownerAddress)
+	let owner = accounts.services.getOrCreateAccount(ownerAddress)
 	owner.save()
 
-	let operator = accounts.getOrCreateAccount(operatorAddress)
+	let operator = accounts.services.getOrCreateAccount(operatorAddress)
 	operator.save()
 
-	let operatorOwner = accounts.getOrCreateOperatorOwner(owner.id, operator.id, event.params._approved)
+	let operatorOwner = accounts.services.getOrCreateOperatorOwner(owner.id, operator.id, event.params._approved)
 	operatorOwner.save()
 
 }
