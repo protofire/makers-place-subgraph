@@ -1,5 +1,5 @@
 import { ethereum } from "@graphprotocol/graph-ts";
-import { blocks, transactions } from "../";
+import { blocks, transactions } from "../index";
 
 export namespace shared {
 	export namespace helpers {
