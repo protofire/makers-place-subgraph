@@ -12,6 +12,13 @@ export namespace accounts {
 			if (account == null) {
 				account = new Account(accountId)
 				account.address = accountAddress
+				account.tokensAmount = integer.ZERO
+				account.sentTransactionsAmount = integer.ZERO
+				account.recievedTransactionsAmount = integer.ZERO
+				account.approvedTokensAmount = integer.ZERO
+				account.digitalMediaCreatedAmount = integer.ZERO
+				account.digitalMediaCollectionsAmount = integer.ZERO
+				account.digitalMediaReleasesAmount = integer.ZERO
 			}
 			return account as Account
 		}
@@ -19,7 +26,7 @@ export namespace accounts {
 
 		export function getOrCreateOperatorOwner(
 			ownerId: string, operatorId: string,
-			approved: boolean
+			approved: boolean, transaction: string
 		): OperatorOwner {
 			let operatorOwnerId = helpers.getOperatorOwnerId(ownerId, operatorId)
 			let operatorOwner = OperatorOwner.load(operatorOwnerId)
@@ -27,6 +34,7 @@ export namespace accounts {
 				operatorOwner = new OperatorOwner(operatorOwnerId)
 				operatorOwner.owner = ownerId
 				operatorOwner.operator = operatorId
+				operatorOwner.transaction = transaction
 			}
 			operatorOwner.approved = approved
 			return operatorOwner as OperatorOwner
@@ -40,8 +48,35 @@ export namespace accounts {
 			creator.approvedCreator = newCreatorId
 			return creator as Account
 		}
+
+		export function burnDigitalMediaRelease(id: string): Account {
+			let entity = Account.load(id)
+			if (entity != null) {
+				entity = helpers.decreaseDigitalMediaReleasesAmount(entity as Account)
+				return entity as Account
+			}
+			return null as Account
+		}
 	}
 	export namespace helpers {
+
+		export function decreaseDigitalMediaReleasesAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaReleasesAmount.minus(integer.ONE)
+			return entity as Account
+		}
+		export function increaseDigitalMediaReleasesAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaReleasesAmount.plus(integer.ONE)
+			return entity as Account
+		}
+		export function increaseDigitalMediaCollectionsAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCollectionsAmount.plus(integer.ONE)
+			return entity as Account
+		}
+
+		export function increaseDigitalMediaCreatedAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCreatedAmount.plus(integer.ONE)
+			return entity as Account
+		}
 
 		export function increaseRecievedTransactionsAmount(entity: Account): Account {
 			entity.tokensAmount = entity.recievedTransactionsAmount.plus(integer.ONE)

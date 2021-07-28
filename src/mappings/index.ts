@@ -25,14 +25,14 @@ import { transfer } from "./transfer"
 import {
 	tokens,
 	accounts,
-	blocks,
-	transactions,
 	digitalMedia as digitalMediaModule,
 	releases,
 	collections,
+	shared
 } from "../modules";
 
 export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMediaPrintIndexEvent): void {
+	shared.helpers.handleEvmMetadata(event)
 	let digitalMedia = digitalMediaModule.updatePrintIndex(
 		event.params.digitalMediaId.toHex(),
 		event.params.printEdition
@@ -44,6 +44,7 @@ export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMedi
 // * approvedCreator.
 
 export function handleChangedCreator(event: ChangedCreator): void {
+	shared.helpers.handleEvmMetadata(event)
 	let creatorAddress = event.params.creator
 	let newCreatorAddress = event.params.newCreator
 	let newCreator = accounts.services.getOrCreateAccount(newCreatorAddress)
@@ -56,9 +57,15 @@ export function handleChangedCreator(event: ChangedCreator): void {
 }
 
 export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollectionCreateEvent): void {
+	shared.helpers.handleEvmMetadata(event)
+
+	let creator = accounts.services.getOrCreateAccount(event.params.creator)
+	creator = accounts.helpers.increaseDigitalMediaCollectionsAmount(creator)
+	creator.save()
+
 	let collection = collections.getOrCreateDigitalMediaCollection(
 		event.params.id.toHex(),
-		event.params.creator,
+		event.params.creator.toHex(),
 		event.params.storeContractAddress,
 		event.params.metadataPath ,
 	)
@@ -66,14 +73,23 @@ export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollection
 }
 
 export function handleDigitalMediaReleaseBurn(event: DigitalMediaReleaseBurnEvent): void {
+	shared.helpers.handleEvmMetadata(event)
 	let release = releases.burnToken(event.params.tokenId.toHex())
+	release.owner = ADDRESS_ZERO
 	release.save()
+	let owner = accounts.services.burnDigitalMediaRelease(release.owner)
+	owner.save()
 }
 
 export function handleDigitalMediaReleaseCreate(event: DigitalMediaReleaseCreateEvent): void {
+	shared.helpers.handleEvmMetadata(event)
+	let owner = accounts.services.getOrCreateAccount(event.params.owner)
+	owner = accounts.helpers.increaseDigitalMediaReleasesAmount(owner)
+	owner.save()
+
 	let release = releases.getOrCreateDigitalMediaRelease(
 		event.params.id.toHex(),
-		event.params.owner,
+		owner.id,
 		event.params.printEdition,
 		event.params.tokenURI,
 		event.params.digitalMediaId.toHex()
@@ -83,6 +99,7 @@ export function handleDigitalMediaReleaseCreate(event: DigitalMediaReleaseCreate
 }
 
 export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
+	shared.helpers.handleEvmMetadata(event)
 	let digitalMedia = digitalMediaModule.burnToken(
 		event.params.id.toHex()
 	)
@@ -90,10 +107,15 @@ export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
 }
 
 export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
+	shared.helpers.handleEvmMetadata(event)
+	let creator = accounts.services.getOrCreateAccount(event.params.creator)
+	creator = accounts.helpers.increaseDigitalMediaCreatedAmount(creator)
+	creator.save()
+
 	let digitalMedia = digitalMediaModule.getOrCreateDigitalMedia(
 		event.params.id.toHex(),
 		event.params.storeContractAddress,
-		event.params.creator,
+		event.params.creator.toHex(),
 		event.params.totalSupply,
 		event.params.collectionId,
 		event.params.printIndex,
@@ -103,28 +125,15 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 }
 
 export function handleTransfer(event: Transfer): void {
-
+	shared.helpers.handleEvmMetadata(event)
+	// TODO: create the er721 transfer - evm transfer relationship
 	let from = event.params._from.toHex()
 	let to = event.params._to.toHex()
 	let tokenId = event.params._tokenId.toHex()
 	let blockNumber = event.block.number
 	let blockId = blockNumber.toString()
-	let txHash = event.transaction.hash
 	let timestamp = event.block.timestamp
 
-	let block = blocks.services.getOrCreateBlock(blockId, timestamp, blockNumber)
-	block = blocks.helpers.increaseErc721TransactionsCount(block)
-	block.save()
-
-	let meta = transactions.getOrCreateTransactionMeta(
-		txHash.toHexString(),
-		blockId,
-		txHash,
-		event.transaction.from,
-		event.transaction.gasUsed,
-		event.transaction.gasPrice,
-	)
-	meta.save()
 
 	if (from == ADDRESS_ZERO) {
 		transfer.handleMint(event.params._to, tokenId, timestamp, blockId)
@@ -137,9 +146,11 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleApproval(event: Approval): void {
+	shared.helpers.handleEvmMetadata(event)
 	let tokenId = event.params._tokenId.toHex()
 	let ownerAddress = event.params._owner
 	let approvedAddress = event.params._approved
+
 
 	let approved = accounts.services.getOrCreateAccount(approvedAddress)
 	approved = accounts.helpers.increaseApprovedTokenCount(approved)
@@ -153,6 +164,7 @@ export function handleApproval(event: Approval): void {
 }
 
 export function handleApprovalForAll(event: ApprovalForAll): void {
+	shared.helpers.handleEvmMetadata(event)
 	let ownerAddress = event.params._owner
 	let operatorAddress = event.params._operator
 
@@ -162,7 +174,13 @@ export function handleApprovalForAll(event: ApprovalForAll): void {
 	let operator = accounts.services.getOrCreateAccount(operatorAddress)
 	operator.save()
 
-	let operatorOwner = accounts.services.getOrCreateOperatorOwner(owner.id, operator.id, event.params._approved)
+	let operatorOwner = accounts.services.getOrCreateOperatorOwner(
+		owner.id,
+		operator.id,
+		event.params._approved,
+		event.transaction.hash.toHexString()
+	)
+
 	operatorOwner.save()
 
 }

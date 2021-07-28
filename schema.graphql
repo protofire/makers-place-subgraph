@@ -41,6 +41,8 @@ type Transaction implements Metadata @entity {
 
 	"Transaction's gas price"
     gasPrice: BigInt
+
+	approvals: [OperatorOwner]!@derivedFrom(field: "transaction")
 }
 
 interface Erc721Token {
@@ -111,6 +113,23 @@ type Account @entity {
 	"recieved transactions amount"
 	recievedTransactionsAmount: BigInt
 
+	"cretated digital media"
+	digitalMedia: [DigitalMedia]! @derivedFrom(field: "creator")
+	
+	"cretated digital media amount"
+	digitalMediaCreatedAmount: BigInt!
+
+	"created digital media collections"
+	digitalMediaCollections: [DigitalMedia]! @derivedFrom(field: "creator")
+	
+	"created digital media amount"
+	digitalMediaCollectionsAmount: BigInt!
+
+	"owned releases"
+	digitalMediaReleases: [DigitalMediaRelease]! @derivedFrom(field: "owner")
+
+	"owned releases amount"
+	digitalMediaReleasesAmount: BigInt
 }
 
 type OperatorOwner @entity {
@@ -120,11 +139,14 @@ type OperatorOwner @entity {
 	"Owner of the tokens"
 	owner: Account
 
-	"Approved to transfer tokens"
+	"Approved to transfer tokens of"
 	operator: Account!
 
 	"Was approved"
 	approved: Boolean
+
+	"Evm transaction of the approval"
+	transaction: Transaction
 }
 
 enum TranasctionType { 
@@ -227,8 +249,8 @@ type DigitalMedia @entity {
 	"Digital media storage address"
 	storeContractAddress: Bytes
 
-	"Digital media creator's Address"
-	creatorAddress: Bytes
+	"Digital media creator"
+	creator: Account
 
 	"DigitalMedia's total supply"
 	totalSupply: BigInt
@@ -254,7 +276,7 @@ type DigitalMediaRelease @entity{
 	id: ID!	
 
 	"Address that own's the release"
- 	owner: Bytes
+ 	owner: Account
 
 	"Supply (?"
  	printEdition: BigInt
@@ -277,7 +299,7 @@ type DigitalMediaCollection @entity {
 	storeContractAddress: Bytes!
 
 	"Digital media creator's Address"
-	creatorAddress: Bytes!
+	creator: Account!
 
 	"Colelction's metadata path"
 	metadataPath: String! 
