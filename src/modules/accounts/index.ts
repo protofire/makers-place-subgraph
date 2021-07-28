@@ -39,6 +39,21 @@ export namespace accounts {
 			operatorOwner.approved = approved
 			return operatorOwner as OperatorOwner
 		}
+		export function getOrCreateManagerOwner(
+			ownerId: string, managerId: string,
+			approved: boolean, transaction: string
+		): OperatorOwner {
+			let operatorOwnerId = helpers.getOperatorOwnerId(ownerId, managerId)
+			let operatorOwner = OperatorOwner.load(operatorOwnerId)
+			if (operatorOwner == null) {
+				operatorOwner = new OperatorOwner(operatorOwnerId)
+				operatorOwner.owner = ownerId
+				operatorOwner.operator = managerId
+				operatorOwner.transaction = transaction
+			}
+			operatorOwner.approved = approved
+			return operatorOwner as OperatorOwner
+		}
 
 		export function changeApprovedCreator(
 			creatorAddress: Bytes,

@@ -44,4 +44,6 @@ dataSources:
           handler: handleUpdateDigitalMediaPrintIndexEvent
         - event: ChangedCreator(address,address)
           handler: handleChangedCreator
+        - event: OboApprovalForAll(address,address,bool)
+          handler: handleOboApprovalForAll
       file: ./src/mappings/index.ts
