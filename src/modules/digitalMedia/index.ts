@@ -12,7 +12,7 @@ export namespace digitalMedia {
 		if (entity == null) {
 			entity = new DigitalMedia(id)
 			entity.storeContractAddress = storeContract
-			entity.creatorAddress = creator
+			entity.creator = creator
 			entity.totalSupply = totalSupply
 			entity.printIndex = printIndex
 			entity.collectionId = collectionId

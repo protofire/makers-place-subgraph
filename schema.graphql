@@ -114,10 +114,16 @@ type Account @entity {
 	recievedTransactionsAmount: BigInt
 
 	"cretated digital media"
-	digitalMedia: [DigitalMedia]! @derivedFrom(field: "creatorAddress")
+	digitalMedia: [DigitalMedia]! @derivedFrom(field: "creator")
 	
 	"cretated digital media amount"
 	digitalMediaCreatedAmount: BigInt!
+
+	"created digital media collections"
+	digitalMediaCollections: [DigitalMedia]! @derivedFrom(field: "creator")
+	
+	"created digital media amount"
+	digitalMediaCollectionsAmount: BigInt!
 }
 
 type OperatorOwner @entity {
@@ -237,8 +243,8 @@ type DigitalMedia @entity {
 	"Digital media storage address"
 	storeContractAddress: Bytes
 
-	"Digital media creator's Address"
-	creatorAddress: Account
+	"Digital media creator"
+	creator: Account
 
 	"DigitalMedia's total supply"
 	totalSupply: BigInt
@@ -287,7 +293,7 @@ type DigitalMediaCollection @entity {
 	storeContractAddress: Bytes!
 
 	"Digital media creator's Address"
-	creatorAddress: Bytes!
+	creator: Account!
 
 	"Colelction's metadata path"
 	metadataPath: String! 

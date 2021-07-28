@@ -58,9 +58,14 @@ export function handleChangedCreator(event: ChangedCreator): void {
 
 export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollectionCreateEvent): void {
 	shared.helpers.handleEvmMetadata(event)
+
+	let creator = accounts.services.getOrCreateAccount(event.params.creator)
+	creator = accounts.helpers.increaseDigitalMediaCollectionsAmount(creator)
+	creator.save()
+
 	let collection = collections.getOrCreateDigitalMediaCollection(
 		event.params.id.toHex(),
-		event.params.creator,
+		event.params.creator.toHex(),
 		event.params.storeContractAddress,
 		event.params.metadataPath ,
 	)
@@ -97,7 +102,7 @@ export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
 export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 	shared.helpers.handleEvmMetadata(event)
 	let creator = accounts.services.getOrCreateAccount(event.params.creator)
-	creator = accounts.helpers.reaseDigitalMediaCreatedAmount(creator)
+	creator = accounts.helpers.increaseDigitalMediaCreatedAmount(creator)
 	creator.save()
 
 	let digitalMedia = digitalMediaModule.getOrCreateDigitalMedia(

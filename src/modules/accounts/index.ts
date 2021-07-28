@@ -17,6 +17,7 @@ export namespace accounts {
 				account.recievedTransactionsAmount = integer.ZERO
 				account.approvedTokensAmount = integer.ZERO
 				account.digitalMediaCreatedAmount = integer.ZERO
+				account.digitalMediaCollectionsAmount = integer.ZERO
 			}
 			return account as Account
 		}
@@ -49,7 +50,12 @@ export namespace accounts {
 	}
 	export namespace helpers {
 
-		export function reaseDigitalMediaCreatedAmount(entity: Account): Account {
+		export function increaseDigitalMediaCollectionsAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCollectionsAmount.plus(integer.ONE)
+			return entity as Account
+		}
+
+		export function increaseDigitalMediaCreatedAmount(entity: Account): Account {
 			entity.tokensAmount = entity.digitalMediaCreatedAmount.plus(integer.ONE)
 			return entity as Account
 		}
