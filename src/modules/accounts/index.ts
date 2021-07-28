@@ -12,6 +12,11 @@ export namespace accounts {
 			if (account == null) {
 				account = new Account(accountId)
 				account.address = accountAddress
+				account.tokensAmount = integer.ZERO
+				account.sentTransactionsAmount = integer.ZERO
+				account.recievedTransactionsAmount = integer.ZERO
+				account.approvedTokensAmount = integer.ZERO
+				account.digitalMediaCreatedAmount = integer.ZERO
 			}
 			return account as Account
 		}
@@ -43,6 +48,11 @@ export namespace accounts {
 		}
 	}
 	export namespace helpers {
+
+		export function reaseDigitalMediaCreatedAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCreatedAmount.plus(integer.ONE)
+			return entity as Account
+		}
 
 		export function increaseRecievedTransactionsAmount(entity: Account): Account {
 			entity.tokensAmount = entity.recievedTransactionsAmount.plus(integer.ONE)

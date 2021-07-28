@@ -3,7 +3,7 @@ import { DigitalMedia } from "../../../generated/schema";
 
 export namespace digitalMedia {
 	export function getOrCreateDigitalMedia(
-		id: string, storeContract: Bytes, creator: Bytes,
+		id: string, storeContract: Bytes, creator: string,
 		totalSupply: BigInt, collectionId: BigInt,
 		printIndex: BigInt, metadataPath: string
 

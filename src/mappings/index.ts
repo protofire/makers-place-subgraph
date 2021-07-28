@@ -96,10 +96,14 @@ export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
 
 export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 	shared.helpers.handleEvmMetadata(event)
+	let creator = accounts.services.getOrCreateAccount(event.params.creator)
+	creator = accounts.helpers.reaseDigitalMediaCreatedAmount(creator)
+	creator.save()
+
 	let digitalMedia = digitalMediaModule.getOrCreateDigitalMedia(
 		event.params.id.toHex(),
 		event.params.storeContractAddress,
-		event.params.creator,
+		event.params.creator.toHex(),
 		event.params.totalSupply,
 		event.params.collectionId,
 		event.params.printIndex,

@@ -113,6 +113,11 @@ type Account @entity {
 	"recieved transactions amount"
 	recievedTransactionsAmount: BigInt
 
+	"cretated digital media"
+	digitalMedia: [DigitalMedia]! @derivedFrom(field: "creatorAddress")
+	
+	"cretated digital media amount"
+	digitalMediaCreatedAmount: BigInt!
 }
 
 type OperatorOwner @entity {
@@ -233,7 +238,7 @@ type DigitalMedia @entity {
 	storeContractAddress: Bytes
 
 	"Digital media creator's Address"
-	creatorAddress: Bytes
+	creatorAddress: Account
 
 	"DigitalMedia's total supply"
 	totalSupply: BigInt
