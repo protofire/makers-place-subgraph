@@ -109,6 +109,7 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 }
 
 export function handleTransfer(event: Transfer): void {
+	shared.helpers.handleEvmMetadata(event)
 	// TODO: create the er721 transfer - evm transfer relationship
 	let from = event.params._from.toHex()
 	let to = event.params._to.toHex()
@@ -117,7 +118,6 @@ export function handleTransfer(event: Transfer): void {
 	let blockId = blockNumber.toString()
 	let timestamp = event.block.timestamp
 
-	shared.helpers.handleEvmMetadata(event)
 
 	if (from == ADDRESS_ZERO) {
 		transfer.handleMint(event.params._to, tokenId, timestamp, blockId)
@@ -130,11 +130,11 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleApproval(event: Approval): void {
+	shared.helpers.handleEvmMetadata(event)
 	let tokenId = event.params._tokenId.toHex()
 	let ownerAddress = event.params._owner
 	let approvedAddress = event.params._approved
 
-	shared.helpers.handleEvmMetadata(event)
 
 	let approved = accounts.services.getOrCreateAccount(approvedAddress)
 	approved = accounts.helpers.increaseApprovedTokenCount(approved)
@@ -148,9 +148,9 @@ export function handleApproval(event: Approval): void {
 }
 
 export function handleApprovalForAll(event: ApprovalForAll): void {
+	shared.helpers.handleEvmMetadata(event)
 	let ownerAddress = event.params._owner
 	let operatorAddress = event.params._operator
-	shared.helpers.handleEvmMetadata(event)
 
 	let owner = accounts.services.getOrCreateAccount(ownerAddress)
 	owner.save()
