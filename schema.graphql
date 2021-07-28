@@ -124,6 +124,12 @@ type Account @entity {
 	
 	"created digital media amount"
 	digitalMediaCollectionsAmount: BigInt!
+
+	"owned releases"
+	digitalMediaReleases: [DigitalMediaRelease]! @derivedFrom(field: "owner")
+
+	"owned releases amount"
+	digitalMediaReleasesAmount: [DigitalMediaRelease]! @derivedFrom(field: "owner")
 }
 
 type OperatorOwner @entity {
@@ -270,7 +276,7 @@ type DigitalMediaRelease @entity{
 	id: ID!	
 
 	"Address that own's the release"
- 	owner: Bytes
+ 	owner: Account
 
 	"Supply (?"
  	printEdition: BigInt

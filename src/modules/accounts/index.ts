@@ -18,6 +18,7 @@ export namespace accounts {
 				account.approvedTokensAmount = integer.ZERO
 				account.digitalMediaCreatedAmount = integer.ZERO
 				account.digitalMediaCollectionsAmount = integer.ZERO
+				account.digitalMediaReleasesAmount = integer.ZERO
 			}
 			return account as Account
 		}
@@ -47,9 +48,26 @@ export namespace accounts {
 			creator.approvedCreator = newCreatorId
 			return creator as Account
 		}
+
+		export function burnDigitalMediaRelease(id: string): Account {
+			let entity = Account.load(id)
+			if (entity != null) {
+				return
+			}
+			entity = helpers.decreaseDigitalMediaReleasesAmount(entity)
+			return entity as Account
+		}
 	}
 	export namespace helpers {
 
+		export function decreaseDigitalMediaReleasesAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCollectionsAmount.minus(integer.ONE)
+			return entity as Account
+		}
+		export function increaseDigitalMediaReleasesAmount(entity: Account): Account {
+			entity.tokensAmount = entity.digitalMediaCollectionsAmount.plus(integer.ONE)
+			return entity as Account
+		}
 		export function increaseDigitalMediaCollectionsAmount(entity: Account): Account {
 			entity.tokensAmount = entity.digitalMediaCollectionsAmount.plus(integer.ONE)
 			return entity as Account

@@ -3,7 +3,7 @@ import { DigitalMediaRelease } from "../../../generated/schema";
 
 export namespace releases {
 	export function getOrCreateDigitalMediaRelease(
-		id: string, owner: Bytes, printEdition: BigInt,
+		id: string, owner: string, printEdition: BigInt,
 		tokenURI: string, digitalMediaId: string
 	): DigitalMediaRelease {
 		let entity = DigitalMediaRelease.load(id)

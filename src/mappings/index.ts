@@ -76,13 +76,19 @@ export function handleDigitalMediaReleaseBurn(event: DigitalMediaReleaseBurnEven
 	shared.helpers.handleEvmMetadata(event)
 	let release = releases.burnToken(event.params.tokenId.toHex())
 	release.save()
+	let owner = accounts.services.burnDigitalMediaRelease(release.owner)
+	owner.save()
 }
 
 export function handleDigitalMediaReleaseCreate(event: DigitalMediaReleaseCreateEvent): void {
 	shared.helpers.handleEvmMetadata(event)
+	let owner = accounts.services.getOrCreateAccount(event.params.owner)
+	owner = accounts.helpers.increaseDigitalMediaReleasesAmount(owner)
+	owner.save()
+
 	let release = releases.getOrCreateDigitalMediaRelease(
 		event.params.id.toHex(),
-		event.params.owner,
+		owner.id,
 		event.params.printEdition,
 		event.params.tokenURI,
 		event.params.digitalMediaId.toHex()
