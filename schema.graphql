@@ -41,6 +41,8 @@ type Transaction implements Metadata @entity {
 
 	"Transaction's gas price"
     gasPrice: BigInt
+
+	approvals: [OperatorOwner]!@derivedFrom(field: "transaction")
 }
 
 interface Erc721Token {
@@ -120,11 +122,14 @@ type OperatorOwner @entity {
 	"Owner of the tokens"
 	owner: Account
 
-	"Approved to transfer tokens"
+	"Approved to transfer tokens of"
 	operator: Account!
 
 	"Was approved"
 	approved: Boolean
+
+	"Evm transaction of the approval"
+	transaction: Transaction
 }
 
 enum TranasctionType { 

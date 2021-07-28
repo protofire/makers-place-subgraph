@@ -19,7 +19,7 @@ export namespace accounts {
 
 		export function getOrCreateOperatorOwner(
 			ownerId: string, operatorId: string,
-			approved: boolean
+			approved: boolean, transaction: string
 		): OperatorOwner {
 			let operatorOwnerId = helpers.getOperatorOwnerId(ownerId, operatorId)
 			let operatorOwner = OperatorOwner.load(operatorOwnerId)
@@ -27,6 +27,7 @@ export namespace accounts {
 				operatorOwner = new OperatorOwner(operatorOwnerId)
 				operatorOwner.owner = ownerId
 				operatorOwner.operator = operatorId
+				operatorOwner.transaction = transaction
 			}
 			operatorOwner.approved = approved
 			return operatorOwner as OperatorOwner
