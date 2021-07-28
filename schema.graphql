@@ -129,7 +129,7 @@ type Account @entity {
 	digitalMediaReleases: [DigitalMediaRelease]! @derivedFrom(field: "owner")
 
 	"owned releases amount"
-	digitalMediaReleasesAmount: [DigitalMediaRelease]! @derivedFrom(field: "owner")
+	digitalMediaReleasesAmount: BigInt
 }
 
 type OperatorOwner @entity {

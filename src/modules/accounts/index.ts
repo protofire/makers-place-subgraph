@@ -52,20 +52,20 @@ export namespace accounts {
 		export function burnDigitalMediaRelease(id: string): Account {
 			let entity = Account.load(id)
 			if (entity != null) {
-				return
+				entity = helpers.decreaseDigitalMediaReleasesAmount(entity as Account)
+				return entity as Account
 			}
-			entity = helpers.decreaseDigitalMediaReleasesAmount(entity)
-			return entity as Account
+			return null as Account
 		}
 	}
 	export namespace helpers {
 
 		export function decreaseDigitalMediaReleasesAmount(entity: Account): Account {
-			entity.tokensAmount = entity.digitalMediaCollectionsAmount.minus(integer.ONE)
+			entity.tokensAmount = entity.digitalMediaReleasesAmount.minus(integer.ONE)
 			return entity as Account
 		}
 		export function increaseDigitalMediaReleasesAmount(entity: Account): Account {
-			entity.tokensAmount = entity.digitalMediaCollectionsAmount.plus(integer.ONE)
+			entity.tokensAmount = entity.digitalMediaReleasesAmount.plus(integer.ONE)
 			return entity as Account
 		}
 		export function increaseDigitalMediaCollectionsAmount(entity: Account): Account {
