@@ -9,7 +9,9 @@ import {
 	DigitalMediaReleaseBurnEvent,
 	DigitalMediaCollectionCreateEvent,
 	ChangedCreator,
-	UpdateDigitalMediaPrintIndexEvent
+	UpdateDigitalMediaPrintIndexEvent,
+	OboApprovalForAll,
+	OboDisabledForAll
 } from "../../generated/makersplace/makerstokenv2";
 /**
 * TODO: missing for index
@@ -30,6 +32,40 @@ import {
 	collections,
 	shared
 } from "../modules";
+
+export function handleOboDisabledForAll(event: OboDisabledForAll): void {
+	shared.helpers.handleEvmMetadata(event)
+
+	let owner = accounts.services.getOrCreateAccount(event.transaction.from)
+	owner.save()
+
+	let operator = accounts.services.getOrCreateAccount(event.params._operator)
+	operator.save()
+
+	let managerOwner = accounts.services.disableManagerOwner(
+		owner.id,
+		operator.id,
+	)
+	managerOwner.save()
+}
+
+export function handleOboApprovalForAll(event: OboApprovalForAll): void {
+	shared.helpers.handleEvmMetadata(event)
+
+	let owner = accounts.services.getOrCreateAccount(event.params._owner)
+	owner.save()
+
+	let operator = accounts.services.getOrCreateAccount(event.params._operator)
+	operator.save()
+
+	let managerOwner = accounts.services.getOrCreateManagerOwner(
+		owner.id,
+		operator.id,
+		event.params._approved,
+		event.transaction.hash.toHexString()
+	)
+	managerOwner.save()
+}
 
 export function handleUpdateDigitalMediaPrintIndexEvent(event: UpdateDigitalMediaPrintIndexEvent): void {
 	shared.helpers.handleEvmMetadata(event)

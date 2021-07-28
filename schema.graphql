@@ -130,7 +130,34 @@ type Account @entity {
 
 	"owned releases amount"
 	digitalMediaReleasesAmount: BigInt
+
+	"Obo all access approved manager"
+	managedAccounts: [ManagerOwner]! @derivedFrom(field: "manager")
+
+	accountManagers: [ManagerOwner]! @derivedFrom(field: "owner")
+
+	operatedAccounts: [OperatorOwner]! @derivedFrom(field: "operator")
+
+	accountOperators: [OperatorOwner]! @derivedFrom(field: "owner")
 }
+
+type ManagerOwner @entity {
+	"Internal ID used for indexation"
+	id: ID! # Set to `${owner.id}-${manager.id}`
+
+	"Owner of the tokens"
+	owner: Account
+
+	"Approved to transfer tokens of"
+	manager: Account!
+
+	"Was approved"
+	approved: Boolean
+
+	"Evm transaction of the approval"
+	transaction: Transaction
+}
+
 
 type OperatorOwner @entity {
 	"Internal ID used for indexation"
