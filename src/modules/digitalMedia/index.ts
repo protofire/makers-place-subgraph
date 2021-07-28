@@ -3,7 +3,7 @@ import { DigitalMedia } from "../../../generated/schema";
 
 export namespace digitalMedia {
 	export function getOrCreateDigitalMedia(
-		id: string, storeContract: Bytes, creator: Bytes,
+		id: string, storeContract: Bytes, creator: string,
 		totalSupply: BigInt, collectionId: BigInt,
 		printIndex: BigInt, metadataPath: string
 
@@ -12,7 +12,7 @@ export namespace digitalMedia {
 		if (entity == null) {
 			entity = new DigitalMedia(id)
 			entity.storeContractAddress = storeContract
-			entity.creatorAddress = creator
+			entity.creator = creator
 			entity.totalSupply = totalSupply
 			entity.printIndex = printIndex
 			entity.collectionId = collectionId

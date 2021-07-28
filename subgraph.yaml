@@ -22,7 +22,7 @@ dataSources:
         - Burn
         - Transfer
         - Block
-        - TransactionMeta
+        - Transaction
         - OperatorOwner
       abis:
         - name: makerstokenv2
