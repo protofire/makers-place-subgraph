@@ -1,6 +1,6 @@
 import { Bytes } from '@graphprotocol/graph-ts';
 import { integer } from '@protofire/subgraph-toolkit';
-import { Account, OperatorOwner } from '../../../generated/schema'
+import { Account, ManagerOwner, OperatorOwner } from '../../../generated/schema'
 
 export namespace accounts {
 
@@ -42,17 +42,24 @@ export namespace accounts {
 		export function getOrCreateManagerOwner(
 			ownerId: string, managerId: string,
 			approved: boolean, transaction: string
-		): OperatorOwner {
+		): ManagerOwner {
 			let operatorOwnerId = helpers.getOperatorOwnerId(ownerId, managerId)
-			let operatorOwner = OperatorOwner.load(operatorOwnerId)
+			let operatorOwner = ManagerOwner.load(operatorOwnerId)
 			if (operatorOwner == null) {
-				operatorOwner = new OperatorOwner(operatorOwnerId)
+				operatorOwner = new ManagerOwner(operatorOwnerId)
 				operatorOwner.owner = ownerId
-				operatorOwner.operator = managerId
+				operatorOwner.manager = managerId
 				operatorOwner.transaction = transaction
 			}
 			operatorOwner.approved = approved
-			return operatorOwner as OperatorOwner
+			return operatorOwner as ManagerOwner
+		}
+
+		export function disableManagerOwner(ownerId: string, managerId: string): ManagerOwner {
+			let id = helpers.getOperatorOwnerId(ownerId, managerId)
+			let entity = ManagerOwner.load(id)
+			entity.approved = false
+			return entity as ManagerOwner
 		}
 
 		export function changeApprovedCreator(
