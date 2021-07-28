@@ -75,6 +75,7 @@ export function handleDigitalMediaCollectionCreate(event: DigitalMediaCollection
 export function handleDigitalMediaReleaseBurn(event: DigitalMediaReleaseBurnEvent): void {
 	shared.helpers.handleEvmMetadata(event)
 	let release = releases.burnToken(event.params.tokenId.toHex())
+	release.owner = ADDRESS_ZERO
 	release.save()
 	let owner = accounts.services.burnDigitalMediaRelease(release.owner)
 	owner.save()
