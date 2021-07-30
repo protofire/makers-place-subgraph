@@ -55,3 +55,49 @@ The transaction interface provides additional support trough the following entit
    }
 }
 ```
+
+
+## OperatorOwner
+
+	ApprovalForAll(indexed address,indexed address,bool)
+
+In order to support "approval for all" Accounts are related as "many to many" using the OperatorOwner entity.
+
+```graphql
+# working with Transactions
+{
+	operatorOwners(first:20){
+		approved
+		owner{
+			address
+		}
+		operator{
+			address
+		}
+		transaction{
+			hash
+			block{
+				number
+			}
+		}
+	}
+}
+
+```
+
+## Token
+
+	Generated(indexed uint256,indexed address,string)
+
+The Token entity provides an standard erc-721 token interface wich also holds the uri, an string representation of the nft's art.
+
+```graphql
+# working with Transactions
+{
+	tokens(first:20){
+		approval{
+			address
+		}
+	}
+}
+```
