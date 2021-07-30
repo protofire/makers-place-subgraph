@@ -14,7 +14,7 @@ type Block implements Metadata @entity {
     number: BigInt!
 
 	"ERC721 Transactions contained in this block"
-	erc721Transactions: [Transaction!] @derivedFrom(field: "block")
+	erc721Transactions: [TokenTransaction!] @derivedFrom(field: "block")
 
 	"ERC721 Transactions stored amount"
 	erc721TransactionsCount: BigInt

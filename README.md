@@ -14,8 +14,11 @@ This subgraph index the contract "makers token v2" deployed on the following add
 
 	0x2a46f2ffd99e19a89476e2f62270e0a35bbf0756
 
+# Erc721 support
 
-## erc721Transaction
+This section provides an overview of the standard erc721 support to makersplace.
+
+## erc721Transactions
 
 	Transfer(indexed address,indexed address,indexed uint256)
 
@@ -31,7 +34,7 @@ The transaction interface provides additional support trough the following entit
 
 ```graphql
 {
-   Transactions
+   TokenTransactions(first:20)
 	   id
 	   type
 	   ...on Mint{
@@ -55,3 +58,91 @@ The transaction interface provides additional support trough the following entit
    }
 }
 ```
+
+
+## OperatorOwner
+
+	ApprovalForAll(indexed address,indexed address,bool)
+
+In order to support "approval for all" Accounts are related as "many to many" using the OperatorOwner entity.
+
+```graphql
+# working with Transactions
+{
+	operatorOwners(first:20){
+		approved
+		owner{
+			address
+		}
+		operator{
+			address
+		}
+		transaction{
+			hash
+			block{
+				number
+			}
+		}
+	}
+}
+
+```
+
+## Token
+
+	Generated(indexed uint256,indexed address,string)
+
+The Token entity provides an standard erc-721 token interface wich also holds the uri, an string representation of the nft's art.
+
+```graphql
+# working with Transactions
+{
+	tokens(first:20){
+		approval{
+			address
+		}
+	}
+}
+```
+# Evm metadata
+
+This sections offers a view into the support for evm block and transactions
+
+## Block
+
+This entity loaded/created on each handler, the propourse is to provide a minimum way to index and present data over time. 
+
+```graphql
+{
+	blocks(first:20){
+	timestamp
+	number
+	erc721TransactionsCount
+	erc721Transactions(first:2){
+		from{
+			address
+		}
+		to{
+			address
+		}
+	}
+	}
+}
+```
+
+## Transaction 
+
+This entity is created paired w/ the blocks entity and is intended to provide a more detaileed entity for the time series indexation.
+
+```graphql
+{
+	transactions(first:20){
+	hash
+	gasUsed
+	block{
+		timestamp
+	}
+	}
+}
+```
+

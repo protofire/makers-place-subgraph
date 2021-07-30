@@ -8,6 +8,7 @@ export namespace tokens {
 		if (token == null) {
 			token = new Token(tokenId)
 			token.owner = accountId
+			token.burned = false
 		}
 		return token as Token
 	}
