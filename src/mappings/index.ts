@@ -158,6 +158,9 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 		event.params.metadataPath
 	)
 	digitalMedia.save()
+
+	let collection = collections.increasedigitalMediaAmount(digitalMedia.collectionId)
+	collection.save()
 }
 
 export function handleTransfer(event: Transfer): void {
