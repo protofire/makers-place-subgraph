@@ -159,7 +159,7 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 	)
 	digitalMedia.save()
 
-	let collection = collections.increasedigitalMediaAmount(digitalMedia.collectionId)
+	let collection = collections.increasedigitalMediaAmount(digitalMedia.collection)
 	collection.save()
 }
 

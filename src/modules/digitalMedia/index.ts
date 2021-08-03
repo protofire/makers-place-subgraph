@@ -15,7 +15,7 @@ export namespace digitalMedia {
 			entity.creator = creator
 			entity.totalSupply = totalSupply
 			entity.printIndex = printIndex
-			entity.collectionId = collectionId
+			entity.collection = collectionId
 			entity.metadataPath = metadataPath
 		}
 		return entity as DigitalMedia
