@@ -295,7 +295,7 @@ type DigitalMedia @entity {
 	burned: Boolean
 
 	"related release"
-	release: DigitalMediaRelease @derivedFrom(field: "digitalMedia")
+	release: [DigitalMediaRelease!] @derivedFrom(field: "digitalMedia")
 }
 
 type DigitalMediaRelease @entity{
