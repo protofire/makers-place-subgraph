@@ -153,7 +153,7 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 		event.params.storeContractAddress,
 		event.params.creator.toHex(),
 		event.params.totalSupply,
-		event.params.collectionId,
+		event.params.collectionId.toHex(),
 		event.params.printIndex,
 		event.params.metadataPath
 	)
