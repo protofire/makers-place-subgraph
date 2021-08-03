@@ -38,10 +38,14 @@ dataSources:
           handler: handleDigitalMediaCreate
         - event: DigitalMediaBurnEvent(uint256,address,address)
           handler: handleDigitalMediaBurn
+        - event: DigitalMediaReleaseCreateEvent(uint256,address,uint32,string,uint256)
+          handler: handleDigitalMediaReleaseCreate
         - event: DigitalMediaReleaseBurnEvent(uint256,address)
           handler: handleDigitalMediaReleaseBurn
         - event: UpdateDigitalMediaPrintIndexEvent(uint256,uint32)
           handler: handleUpdateDigitalMediaPrintIndexEvent
+        - event: DigitalMediaCollectionCreateEvent(uint256,address,address,string)
+          handler: handleDigitalMediaCollectionCreate
         - event: ChangedCreator(address,address)
           handler: handleChangedCreator
         - event: OboApprovalForAll(address,address,bool)

@@ -137,12 +137,93 @@ This entity is created paired w/ the blocks entity and is intended to provide a 
 ```graphql
 {
 	transactions(first:20){
-	hash
-	gasUsed
-	block{
-		timestamp
-	}
+		hash
+		gasUsed
+		block{
+			timestamp
+		}
 	}
 }
 ```
 
+# Digital media
+
+Here's where maker'splace core features are described.
+
+As the dynamic data-template pattern wasn't used, this subgraph doesn't index follwing events:
+
+
+	- Pause()
+	- Unpause()
+	- SingleCreatorChanged(indexed address,indexed address)
+ 
+## DigitalMediaCollection
+
+	- DigitalMediaCollectionCreateEvent(uint256,address,address,string)
+
+The digital media collection provides an entity to store the collection and related digital media entities.
+
+
+```graphql
+{
+	digitalMediaCollections(first:20){
+		creator {
+			address
+		}
+		digitalMediaAmount
+		digitalMedia{
+			storeContractAddress
+		}
+	}
+}
+```
+
+## DigitalMedia
+
+    - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
+
+This entity provides a way to store the first class citizen of this project, a non fungible token. The digital Media entity provides info about the art creation itself and relates to it's current owner, collection, and so on.
+
+
+```graphql
+{
+	digitalMedias(first: 20){
+		creator {
+			address
+		}
+		collection {
+			metadataPath
+		}
+		releases(first: 5) {
+			tokenURI
+		}
+		metadataPath
+		totalSupply
+	}
+}
+```
+
+## Digital Media Release
+
+	- event: DigitalMediaReleaseCreateEvent(uint256,address,uint32,string,uint256)
+
+This entitiy stores the semi fungible tokens related to the DigitalMedia entity.
+
+
+```graphql
+{
+	digitalMediaReleases(first: 20){
+		creator {
+			address
+		}
+		digitalMedia {
+			collection {
+				metadataPath
+			}
+			metadataPath
+		}
+		printEdition
+		tokenUri
+	}
+}
+```

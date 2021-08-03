@@ -286,7 +286,7 @@ type DigitalMedia @entity {
 	printIndex: BigInt
 
 	"Related Collection Id"
-	collectionId: BigInt
+	collection: DigitalMediaCollection
 
 	"DigitalMedia's metadata's "
 	metadataPath: String
@@ -295,7 +295,7 @@ type DigitalMedia @entity {
 	burned: Boolean
 
 	"related release"
-	release: DigitalMediaRelease @derivedFrom(field: "digitalMedia")
+	release: [DigitalMediaRelease!] @derivedFrom(field: "digitalMedia")
 }
 
 type DigitalMediaRelease @entity{
@@ -330,4 +330,10 @@ type DigitalMediaCollection @entity {
 
 	"Colelction's metadata path"
 	metadataPath: String! 
+
+	"Related digital media entites"
+	digitalMedia: [DigitalMedia!] @derivedFrom(field: "collection") 
+
+	"Total amount of related digital media entities"
+	digitalMediaAmount: BigInt!
 }
