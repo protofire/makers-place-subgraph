@@ -1,0 +1,55 @@
+specVersion: 0.0.2
+description: WIP - This subgraph provide an standard erc-721 implementation extended to the digital media features of markersplace.
+repository: https://github.com/protofire/makers-place-subgraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: makersplace
+    network: mainnet
+    source:
+      address: "0x2a46f2ffd99e19a89476e2f62270e0a35bbf0756"
+      abi: makerstokenv2
+      startBlock: 7510386
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Account
+        - Token
+        - Mint
+        - Burn
+        - Transfer
+        - Block
+        - Transaction
+        - OperatorOwner
+      abis:
+        - name: makerstokenv2
+          file: ./abis/makerstokenv2.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: DigitalMediaCreateEvent(uint256,address,address,uint32,uint32,uint256,string)
+          handler: handleDigitalMediaCreate
+        - event: DigitalMediaBurnEvent(uint256,address,address)
+          handler: handleDigitalMediaBurn
+        - event: DigitalMediaReleaseCreateEvent(uint256,address,uint32,string,uint256)
+          handler: handleDigitalMediaReleaseCreate
+        - event: DigitalMediaReleaseBurnEvent(uint256,address)
+          handler: handleDigitalMediaReleaseBurn
+        - event: UpdateDigitalMediaPrintIndexEvent(uint256,uint32)
+          handler: handleUpdateDigitalMediaPrintIndexEvent
+        - event: DigitalMediaCollectionCreateEvent(uint256,address,address,string)
+          handler: handleDigitalMediaCollectionCreate
+        - event: ChangedCreator(address,address)
+          handler: handleChangedCreator
+        - event: OboApprovalForAll(address,address,bool)
+          handler: handleOboApprovalForAll
+        - event: OboDisabledForAll(address)
+          handler: handleOboDisabledForAll
+      file: ./src/mappings/index.ts

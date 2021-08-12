@@ -1,0 +1,339 @@
+interface Metadata {
+	"Internal ID used for indexation"
+	id: ID!
+}
+
+type Block implements Metadata @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"event timestamp"
+	timestamp: BigInt!	
+	
+	"Block's number"
+    number: BigInt!
+
+	"ERC721 Transactions contained in this block"
+	erc721Transactions: [TokenTransaction!] @derivedFrom(field: "block")
+
+	"ERC721 Transactions stored amount"
+	erc721TransactionsCount: BigInt
+
+	"Chain transactions info"
+	transactions: [Transaction!] @derivedFrom(field: "block")
+}
+
+type Transaction implements Metadata @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Transaction's Block"
+	block: Block!
+
+	"Transaction's hash"
+	hash: Bytes
+
+	"Sender Address"
+	from: Bytes
+
+	"Transaction's gas"
+    gasUsed: BigInt
+
+	"Transaction's gas price"
+    gasPrice: BigInt
+
+	approvals: [OperatorOwner]!@derivedFrom(field: "transaction")
+}
+
+interface Erc721Token {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Token's current owner"
+	owner: Account!
+
+	"Current approval"
+	approval: Account
+
+	"Current burned status"
+	burned: Boolean
+
+	# More info about it?
+}
+
+type Token implements Erc721Token @entity{
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Token's current owner"
+	owner: Account!
+
+	"Current approval"
+	approval: Account
+
+	"Current burned status"
+	burned: Boolean
+}
+
+"A 721 holder account"
+type Account @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Account evm address"
+	address: Bytes
+
+	"the creator that is approved to printing new tokens and creations"
+	approvedCreator: Account
+
+	"the account that approves this account"
+	approvedFor: Account @derivedFrom(field: "approvedCreator")
+
+	"Owned tokens"
+	tokens: [Token!]! @derivedFrom(field: "owner")
+
+	"Owned tokens amount"
+	tokensAmount: BigInt
+
+	"Approved tokens"
+	approved: [Token!]! @derivedFrom(field: "approval")
+
+	"Approved tokens amount"
+	approvedTokensAmount: BigInt
+	
+	"Transactions sent by this account"
+	sent: [TokenTransaction!] @derivedFrom(field: "from")
+
+	"Sent transactions amount"
+	sentTransactionsAmount: BigInt
+
+	"Transactions recieved by this account"
+	recieved: [TokenTransaction!] @derivedFrom(field: "to")
+
+	"recieved transactions amount"
+	recievedTransactionsAmount: BigInt
+
+	"cretated digital media"
+	digitalMedia: [DigitalMedia]! @derivedFrom(field: "creator")
+	
+	"cretated digital media amount"
+	digitalMediaCreatedAmount: BigInt!
+
+	"created digital media collections"
+	digitalMediaCollections: [DigitalMedia]! @derivedFrom(field: "creator")
+	
+	"created digital media amount"
+	digitalMediaCollectionsAmount: BigInt!
+
+	"owned releases"
+	digitalMediaReleases: [DigitalMediaRelease]! @derivedFrom(field: "owner")
+
+	"owned releases amount"
+	digitalMediaReleasesAmount: BigInt
+
+	"Obo all access approved manager"
+	managedAccounts: [ManagerOwner]! @derivedFrom(field: "manager")
+
+	accountManagers: [ManagerOwner]! @derivedFrom(field: "owner")
+
+	operatedAccounts: [OperatorOwner]! @derivedFrom(field: "operator")
+
+	accountOperators: [OperatorOwner]! @derivedFrom(field: "owner")
+}
+
+type ManagerOwner @entity {
+	"Internal ID used for indexation"
+	id: ID! # Set to `${owner.id}-${manager.id}`
+
+	"Owner of the tokens"
+	owner: Account
+
+	"Approved to transfer tokens of"
+	manager: Account!
+
+	"Was approved"
+	approved: Boolean
+
+	"Evm transaction of the approval"
+	transaction: Transaction
+}
+
+
+type OperatorOwner @entity {
+	"Internal ID used for indexation"
+	id: ID! # Set to `${owner.id}-${operator.id}`
+
+	"Owner of the tokens"
+	owner: Account
+
+	"Approved to transfer tokens of"
+	operator: Account!
+
+	"Was approved"
+	approved: Boolean
+
+	"Evm transaction of the approval"
+	transaction: Transaction
+}
+
+enum TranasctionType { 
+	MINT,
+	BURN,
+	TRANSFER
+ }
+
+
+interface TokenTransaction {
+ 	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Current transaction type"
+	type: TranasctionType!
+
+	"Related block"
+	block: Block!
+}
+
+
+type Mint implements TokenTransaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Token traded"
+	token: Token
+
+	"Related block"
+	block: Block!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+type Burn implements TokenTransaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Token traded"
+	token: Token
+
+	"Related block"
+	block: Block!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+type Transfer implements TokenTransaction @entity {
+	"Internal ID used for indexation"
+	id: ID!
+
+	"Seller account"
+	from: Account
+
+	"Buyer account"
+	to: Account
+
+	"Token traded"
+	token: Token
+
+	"Related block"
+	block: Block!
+
+	"Current transaction type"
+	type: TranasctionType!
+}
+
+
+#
+#
+#
+#  Makers Place entities
+#
+#
+
+type DigitalMedia @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Digital media storage address"
+	storeContractAddress: Bytes
+
+	"Digital media creator"
+	creator: Account
+
+	"DigitalMedia's total supply"
+	totalSupply: BigInt
+
+	"DigitalMedia's print index"
+	printIndex: BigInt
+
+	"Related Collection Id"
+	collection: DigitalMediaCollection
+
+	"DigitalMedia's metadata's "
+	metadataPath: String
+
+	"was this token burned"
+	burned: Boolean
+
+	"related release"
+	release: [DigitalMediaRelease!] @derivedFrom(field: "digitalMedia")
+}
+
+type DigitalMediaRelease @entity{
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Address that own's the release"
+ 	owner: Account
+
+	"Supply (?"
+ 	printEdition: BigInt
+
+	"Ipfs uri"
+ 	tokenURI: String
+
+	"related digital media"
+ 	digitalMedia: DigitalMedia
+
+	"was this token burned"
+	burned: Boolean
+}
+
+type DigitalMediaCollection @entity {
+	"Internal ID used for indexation, comes from contract's internal id"
+	id: ID!	
+
+	"Collection's media storage address"
+	storeContractAddress: Bytes
+
+	"Digital media creator's Address"
+	creator: Account
+
+	"Colelction's metadata path"
+	metadataPath: String
+
+	"Related digital media entites"
+	digitalMedia: [DigitalMedia!] @derivedFrom(field: "collection") 
+
+	"Total amount of related digital media entities"
+	digitalMediaAmount: BigInt
+}
