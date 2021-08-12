@@ -323,17 +323,17 @@ type DigitalMediaCollection @entity {
 	id: ID!	
 
 	"Collection's media storage address"
-	storeContractAddress: Bytes!
+	storeContractAddress: Bytes
 
 	"Digital media creator's Address"
-	creator: Account!
+	creator: Account
 
 	"Colelction's metadata path"
-	metadataPath: String! 
+	metadataPath: String
 
 	"Related digital media entites"
 	digitalMedia: [DigitalMedia!] @derivedFrom(field: "collection") 
 
 	"Total amount of related digital media entities"
-	digitalMediaAmount: BigInt!
+	digitalMediaAmount: BigInt
 }

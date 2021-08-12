@@ -13,6 +13,8 @@ import {
 	OboApprovalForAll,
 	OboDisabledForAll
 } from "../../generated/makersplace/makerstokenv2";
+
+
 /**
 * TODO: missing for index
 * - Pause()
@@ -32,6 +34,7 @@ import {
 	collections,
 	shared
 } from "../modules";
+import { log } from '@graphprotocol/graph-ts';
 
 export function handleOboDisabledForAll(event: OboDisabledForAll): void {
 	shared.helpers.handleEvmMetadata(event)
@@ -143,6 +146,7 @@ export function handleDigitalMediaBurn(event: DigitalMediaBurnEvent): void {
 }
 
 export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
+	let collectionId = event.params.collectionId.toHex()
 	shared.helpers.handleEvmMetadata(event)
 	let creator = accounts.services.getOrCreateAccount(event.params.creator)
 	creator = accounts.helpers.increaseDigitalMediaCreatedAmount(creator)
@@ -153,13 +157,15 @@ export function handleDigitalMediaCreate(event: DigitalMediaCreateEvent): void {
 		event.params.storeContractAddress,
 		event.params.creator.toHex(),
 		event.params.totalSupply,
-		event.params.collectionId.toHex(),
+		collectionId,
 		event.params.printIndex,
 		event.params.metadataPath
 	)
 	digitalMedia.save()
-
-	let collection = collections.increasedigitalMediaAmount(digitalMedia.collection)
+	if (collectionId == null) {
+		log.error("the value for collection id was null :: {}", [collectionId])
+	}
+	let collection = collections.increasedigitalMediaAmount(collectionId)
 	collection.save()
 }
 
